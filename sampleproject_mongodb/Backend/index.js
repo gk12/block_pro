@@ -42,7 +42,6 @@ app.post("/login", async (req, res) => {
   const user = await User.findOne({ email: email }).populate("role");
 
   if (user) {
-    // console.log(user.role);
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
