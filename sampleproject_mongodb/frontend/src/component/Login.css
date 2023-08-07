@@ -1,0 +1,35 @@
+.curr{
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  padding-top: 2rem;
+}
+form{
+  width: 25%;
+  /* display: flex; */
+  text-align: center;
+  justify-content: center;
+    border: 3px solid #000000;
+    border-radius: 1rem;
+    
+}
+input[type=email], input[type=password] {
+    width: 80%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 1.5rem;
+  }
+  button {
+    background-color: #04AA6D;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 80%;
+    border-radius: 1.5rem;
+  }
+ 
