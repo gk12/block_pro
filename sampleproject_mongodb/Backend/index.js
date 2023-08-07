@@ -183,7 +183,6 @@ async function verifyAdmin(req, res, next) {
 
 // login admin and see the users data
 app.get("/users", verifyAdmin, async (req, res) => {
-  // console.log(req.isAdmin);
   if (!req.isAdmin) {
     return res.json({
       message: "not authorised",
@@ -191,20 +190,14 @@ app.get("/users", verifyAdmin, async (req, res) => {
   }
  
   const users = await User.find().populate("role");
-  console.log(users);
   const filterdata = filteradmin(users);
   return res.json({ filterdata });
 });
 
 //change the role of user by admin
-
 app.patch("/user/role/:userid", verifyAdmin, async (req, res) => {
-  // const { userid } = req.params;
+  const { userid } = req.params;
   const { role } = req.body;
-
-  // console.log(req.isAdmin);
-
-  // console.log("hello");
 
   if (!req.isAdmin) {
     return res.json({
@@ -214,51 +207,33 @@ app.patch("/user/role/:userid", verifyAdmin, async (req, res) => {
 
 
   try {
-    // const user = await User.findOne({ _id: req.params.userid });
 
-    //User is now role
-    const user = await User.findOne({ _id: req.params.userid }).populate(
+    // find user associated the userid
+    const user = await User.findOne({ _id: userid }).populate(
       "role"
     );
 
-    
+    // if role is same as the role given by admin in body
     if (user.role.role === role) {
       return res.json({ message: "no need to update" });
     }
 
-    console.log(user);
-
+    // find role so that update the role id with new role id
     const role1 = await Role.findOne({ role });
   
 
-    // const  role1 = await Role.findOne({role});
     console.log(role1)
     if (!user) {
       return res.json({ message: "user not found" }).status(404);
     }
 
-   
-
-    //  console.log(user.role._id)
-    // console.log(user.role.role);
-
- 
-
-    // console.log(user.role._id);
-    // user.role._id = role._id;
-    // console.log(user.role.role);
-
-    // const updateduser = await User.updateOne({ _id: user._id }, { role });
-
-    // update
-
-    // 2.05 min
+    // update user with new role
     const updateduser = await User.updateOne({ _id: user._id }, { role:role1._id });
-    // console.log(user.role._id);
-    // console.log(role1._id);
-    // await user.role.save();
+
     res.json({ message: "user details updated", updateduser }).status(200);
-  } catch (error) {
+  }
+   catch (error)
+    {
     console.error("error", error);
     res.json({ message: "something went wrong" });
   }
