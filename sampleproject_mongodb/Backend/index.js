@@ -42,7 +42,6 @@ app.post("/login", async (req, res) => {
   const user = await User.findOne({ email: email }).populate("role");
 
   if (user) {
-
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (isPasswordValid) {
@@ -153,7 +152,7 @@ function filteradmin(users) {
   return users.filter((role1) => role1.role.role !== "admin");
 }
 
-// 08/02/23
+// verify admin
 async function verifyAdmin(req, res, next) {
   jwt.verify(req.token, secretKey, async (err, Data) => {
     if (err) {
@@ -166,22 +165,17 @@ async function verifyAdmin(req, res, next) {
       // data me email hai usse hum check ker rhe hai role ka
       const user = await User.findOne({ email: Data.email }).populate("role");
 
+      // populate roles means join operation 
+
       // i have added this to check the user is associatde with which type of role
       // const userRole = await Role.findOne(user.roleId);
-      console.log(user.role);
-
-      // console.log(userRole)
       if (!user)
         return res.json({
           message: `No User found with the email ${Data.email}`,
         });
 
-      //* user ke ander role and uske ander role
-      console.log(user.role);
-
       // i will send req to check role associated with the email is admin or not
       req.isAdmin = user.role.role === "admin" ? true : false;
-      // console.log(req.isAdmin);
       next();
     }
   });
